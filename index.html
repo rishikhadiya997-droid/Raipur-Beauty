@@ -1,75 +1,224 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#d81b60">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Raipur Beauty</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#fff7fa;color:#222}
-header{background:#d81b60;color:white;padding:18px 16px;position:sticky;top:0;z-index:5}
-.top{display:flex;justify-content:space-between;align-items:center}.logo{font-size:24px;font-weight:700}
-.cart{background:white;color:#d81b60;border:0;border-radius:22px;padding:9px 14px;font-weight:700}
-.search{width:100%;margin-top:14px;padding:12px;border:0;border-radius:10px;font-size:15px}
-.hero{margin:16px;padding:22px;border-radius:18px;background:linear-gradient(135deg,#ffd1e2,#fff);}.hero h1{margin:0 0 8px}.hero p{margin:0 0 15px}
-.btn{background:#d81b60;color:white;border:0;padding:11px 16px;border-radius:9px;font-weight:700}
-section{padding:0 16px 18px}.cats{display:flex;gap:8px;overflow:auto}.cat{white-space:nowrap;background:white;border:1px solid #f1b6cb;padding:9px 13px;border-radius:20px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:white;border-radius:14px;padding:12px;box-shadow:0 2px 10px #0000000d}.pic{height:125px;background:#f9e3ec;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:50px}.name{font-weight:700;margin:9px 0 5px}.price{font-weight:700;color:#d81b60}.add{width:100%;margin-top:8px;background:#222;color:white;border:0;padding:9px;border-radius:8px}
-footer{text-align:center;padding:25px;color:#777}.empty{padding:25px;text-align:center}
-.modal{display:none;position:fixed;inset:0;background:#0008;z-index:10}.box{background:white;margin:12% auto;padding:20px;border-radius:16px;width:90%;max-width:420px}.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eee}.close{float:right;border:0;background:none;font-size:24px}
-input,select{width:100%;padding:11px;margin:7px 0;border:1px solid #ddd;border-radius:8px}
-</style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f7f7f7;color:#222}
+header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #ddd;padding:12px}
+.top{display:flex;align-items:center;gap:10px}.logo{font-size:22px;font-weight:800;color:#e91e63;flex:1}
+.dots{font-size:28px;border:0;background:none;cursor:pointer}
+.search{margin-top:10px;width:100%;padding:12px 14px;border:1px solid #ddd;border-radius:10px;font-size:16px}
+.offer{background:#111;color:#fff;padding:9px 12px;text-align:center;font-size:13px}
+main{padding:12px;max-width:900px;margin:auto}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 5px #ddd}.pic{width:100%;aspect-ratio:1/1;object-fit:cover;background:#eee}
+.info{padding:10px}.name{font-weight:700}.desc{font-size:13px;color:#666;margin:6px 0}.price{font-weight:800;font-size:18px}
+button{border:0;border-radius:8px;padding:10px 12px;cursor:pointer}.buy{width:100%;margin-top:8px;background:#e91e63;color:white;font-weight:700}
+.menu{display:none;position:fixed;right:12px;top:58px;background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 18px #aaa;z-index:20;min-width:170px}.menu button{display:block;width:100%;background:#fff;text-align:left;border-radius:0}
+.panel{display:none;background:#fff;padding:15px;border-radius:12px;margin-top:12px;box-shadow:0 1px 6px #ddd}
+input,textarea,select{width:100%;padding:11px;margin:6px 0 10px;border:1px solid #ccc;border-radius:8px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.adminbtn{background:#111;color:#fff}.danger{background:#d32f2f;color:#fff}.cart{position:fixed;right:14px;bottom:14px;background:#e91e63;color:#fff;border-radius:50px;padding:13px 18px;font-weight:700;box-shadow:0 3px 12px #aaa}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;padding:18px}.box{background:#fff;max-width:500px;margin:8vh auto;padding:18px;border-radius:14px}
+.total{font-size:20px;font-weight:800;margin:10px 0}
+@media(min-width:650px){.grid{grid-template-columns:repeat(4,1fr)}}
+.ai-thumb{width:100%;height:220px;object-fit:cover;border-radius:10px;background:#f3f3f3}.expiry{font-size:11px;color:#777;margin-top:5px}</style>
 </head>
 <body>
-<header><div class="top"><div class="logo">💄 Raipur Beauty</div><button class="cart" onclick="openCart()">🛒 Cart (<span id="count">0</span>)</button></div>
-<input class="search" id="search" placeholder="Search lipstick, serum, foundation..." oninput="render()"></header>
+<header>
+ <div class="top"><div class="logo">💄 Raipur Beauty</div><button class="dots" onclick="toggleMenu()">⋮</button></div>
+ <input id="search" class="search" placeholder="Search your choice..." oninput="renderProducts()">
+</header><div id="categories" style="background:#fff;padding:10px 12px;display:flex;gap:8px;overflow:auto;border-bottom:1px solid #eee">
+<button onclick="setCategory('All')">All</button>
+<button onclick="setCategory('Skin')">Skin</button>
+<button onclick="setCategory('Face')">Face</button>
+<button onclick="setCategory('Eye')">Eye</button>
+<button onclick="setCategory('Lip')">Lip</button>
+<button onclick="setCategory('Nail')">Nail</button>
+</div>
+<div class="offer">Buy 2 = 10% OFF &nbsp; | &nbsp; Buy 3+ = Lowest priced item FREE &nbsp; | &nbsp; 🚫 No Return • No Exchange</div>
 
-<div class="hero"><h1>Beauty delivered in Raipur ✨</h1><p>Makeup & skincare products at your fingertips.</p><button class="btn" onclick="document.getElementById('products').scrollIntoView()">Shop Now</button></div>
+<div id="menu" class="menu">
+ <button onclick="openAdmin()">🔐 Admin Login</button>
+ <button onclick="openCart()">🛒 Cart</button>
+</div>
 
-<section><h2>Categories</h2><div class="cats">
-<button class="cat" onclick="setCat('All')">All</button><button class="cat" onclick="setCat('Makeup')">💄 Makeup</button>
-<button class="cat" onclick="setCat('Skincare')">🧴 Skincare</button><button class="cat" onclick="setCat('Haircare')">💇 Haircare</button>
-</div></section>
+<main>
+ <div id="products" class="grid"></div>
 
-<section id="products"><h2>Popular Products</h2><div class="grid" id="grid"></div></section>
-<footer>© 2026 Raipur Beauty • Raipur, Chhattisgarh<br>Local delivery • WhatsApp orders</footer>
+ <section id="adminPanel" class="panel">
+   <h2>Admin – Add Product</h2>
+   <p style="color:#666">Photo, name, price और description डालकर product add करें.</p>
+   <input id="pName" placeholder="Product name">
+   <div class="row"><input id="pPrice" type="number" min="0" placeholder="Price ₹"><input id="pStock" type="number" min="0" placeholder="Quantity / Stock"></div><select id="pCategory">
+<option value="Skin">Skin</option>
+<option value="Face">Face</option>
+<option value="Eye">Eye</option>
+<option value="Lip">Lip</option>
+<option value="Nail">Nail</option>
+</select><div class="row"><input id="pMnf" type="date" title="Manufacturing date"><input id="pExp" type="date" title="Expiry date"></div>
+   <textarea id="pDesc" rows="3" placeholder="Product description"></textarea>
+   <label>Product photo</label>
+   <input id="pPhoto" type="file" accept="image/*">
+   <button class="adminbtn" onclick="addProduct()">➕ Add Product</button>
+   <button class="danger" onclick="logoutAdmin()">Logout</button>
+   <hr>
+   <div style="margin:14px 0;padding:14px;border:1px solid #ddd;border-radius:10px;background:#fafafa">
+<h3>🤖 AI Bulk Product Add</h3>
+<p style="font-size:13px;color:#666">एक साथ कई products की details paste/upload करें। AI-style helper product title, description और attractive thumbnail layout तैयार करेगा।</p>
+<textarea id="aiBulkText" rows="6" placeholder="Example:
+Lakme Lipstick, 599, 20, Lip, 2026-01-10, 2028-01-09
+Lakme Kajal, 225, 30, Eye, 2026-02-01, 2028-01-31"></textarea>
+<input id="aiBulkImages" type="file" accept="image/*" multiple>
+<button class="adminbtn" onclick="aiBulkAdd()">🤖 Add All Products</button>
+<div id="aiBulkMsg" style="font-size:12px;color:#555;margin-top:6px"></div>
+</div><h3>👥 Customer Data</h3><div id="customerData"></div><hr><h3>Manage Products</h3>
+   <div id="manage"></div>
+ </section>
+</main>
 
-<div class="modal" id="cartModal"><div class="box"><button class="close" onclick="closeCart()">×</button><h2>Your Cart</h2><div id="cartItems"></div><h3>Total: ₹<span id="total">0</span></h3>
-<input id="customer" placeholder="Your name"><input id="phone" placeholder="Mobile number"><input id="address" placeholder="Delivery address in Raipur">
-<button class="btn" style="width:100%" onclick="orderWhatsApp()">Order on WhatsApp</button></div></div>
+<button class="cart" onclick="openCart()">🛒 Cart (<span id="cartCount">0</span>)</button>
+
+<div id="loginModal" class="modal"><div class="box">
+ <h2>Admin Login</h2><input id="adminPass" type="password" placeholder="Admin password">
+ <button class="adminbtn" onclick="login()">Login</button>
+ <button onclick="closeModal('loginModal')">Cancel</button>
+ <p style="font-size:12px;color:#777">Password बदलने के लिए बाद में secure backend/OTP जोड़ना बेहतर रहेगा.</p>
+</div></div>
+
+<div id="cartModal" class="modal"><div class="box">
+ <h2>🛒 Your Cart</h2><div id="cartItems"></div><div class="total" id="cartTotal"></div>
+ <input id="customerName" placeholder="Name">
+ <input id="customerPhone" placeholder="Mobile number" inputmode="numeric">
+ <textarea id="customerAddress" rows="3" placeholder="Delivery address"></textarea>
+ <div style="background:#fff7f7;border:1px solid #f1c0c0;border-radius:8px;padding:10px;margin:10px 0;font-size:13px">
+<b>Terms & Conditions</b><br>
+🚫 No Return & No Exchange on purchased products.<br>
+By clicking <b>Place COD Order</b>, you confirm that you have checked the product, shade and quantity.
+</div><button class="buy" onclick="placeOrder()">Place COD Order</button>
+ <button onclick="closeModal('cartModal')">Close</button>
+</div></div>
 
 <script>
-const products=[
-{id:1,name:"Matte Lipstick",price:399,cat:"Makeup",icon:"💄"},
-{id:2,name:"Hydrating Lip Oil",price:449,cat:"Makeup",icon:"💋"},
-{id:3,name:"Vitamin C Face Serum",price:599,cat:"Skincare",icon:"🧴"},
-{id:4,name:"Daily Face Wash",price:299,cat:"Skincare",icon:"🫧"},
-{id:5,name:"Volume Mascara",price:499,cat:"Makeup",icon:"👁️"},
-{id:6,name:"Kajal Liner",price:249,cat:"Makeup",icon:"🖤"},
-{id:7,name:"Hair Serum",price:349,cat:"Haircare",icon:"✨"},
-{id:8,name:"Moisturizer",price:399,cat:"Skincare",icon:"🌸"}
+const ADMIN_PASSWORD = "Lakme@9131";
+const defaultProducts = [
+ {id:1,name:"Lakmé 9 to 5 Primer + Matte Lip Color",price:599,stock:20,category:"Lipstick",desc:"Long-lasting matte finish lipstick.",image:""},
+ {id:2,name:"Lakmé Absolute Matte Revolution Lip Color",price:750,stock:15,category:"Lipstick",desc:"Rich colour with a comfortable matte finish.",image:""},
+ {id:3,name:"Lakmé Eyeconic Kajal",price:225,stock:30,category:"Eye",desc:"Smooth kajal for an intense eye look.",image:""},
+ {id:4,name:"Lakmé Absolute Skin Dew Serum",price:899,stock:10,category:"Skincare",desc:"Lightweight skincare serum.",image:""}
 ];
-let cart=[],cat="All";
-function setCat(c){cat=c;render()}
-function render(){
-let q=document.getElementById("search").value.toLowerCase();
-let list=products.filter(p=>(cat==="All"||p.cat===cat)&&p.name.toLowerCase().includes(q));
-document.getElementById("grid").innerHTML=list.map(p=>`<div class="card"><div class="pic">${p.icon}</div><div class="name">${p.name}</div><small>${p.cat}</small><div class="price">₹${p.price}</div><button class="add" onclick="add(${p.id})">Add to Cart</button></div>`).join("");
+let products=JSON.parse(localStorage.getItem("rb_products")||"null")||defaultProducts;
+let cart=JSON.parse(localStorage.getItem("rb_cart")||"[]");
+let orders=JSON.parse(localStorage.getItem("rb_orders")||"[]");
+let admin=false;
+let activeCategory="All";
+
+function save(){localStorage.setItem("rb_products",JSON.stringify(products));localStorage.setItem("rb_cart",JSON.stringify(cart));localStorage.setItem("rb_orders",JSON.stringify(orders));}
+function toggleMenu(){let m=document.getElementById("menu");m.style.display=m.style.display==="block"?"none":"block";}
+function openAdmin(){toggleMenu();document.getElementById("loginModal").style.display="block";}
+function closeModal(id){document.getElementById(id).style.display="none";}
+function login(){
+ if(document.getElementById("adminPass").value===ADMIN_PASSWORD){
+   admin=true;closeModal("loginModal");document.getElementById("adminPanel").style.display="block";renderProducts();renderManage();renderCustomerData();
+ }else alert("Wrong password");
 }
-function add(id){cart.push(products.find(p=>p.id===id));updateCount();alert("Added to cart!")}
-function updateCount(){document.getElementById("count").textContent=cart.length}
-function openCart(){document.getElementById("cartModal").style.display="block";let t=0;let el=document.getElementById("cartItems");
-if(!cart.length){el.innerHTML='<div class="empty">Cart is empty.</div>';document.getElementById("total").textContent=0;return}
-el.innerHTML=cart.map((p,i)=>{t+=p.price;return `<div class="row"><span>${p.name}</span><b>₹${p.price}</b></div>`}).join("");
-document.getElementById("total").textContent=t}
-function closeCart(){document.getElementById("cartModal").style.display="none"}
-function orderWhatsApp(){
-if(!cart.length)return alert("Cart is empty");
-let name=document.getElementById("customer").value||"Customer",phone=document.getElementById("phone").value||"",address=document.getElementById("address").value||"";
-let items=cart.map(p=>p.name+" - ₹"+p.price).join("%0A"),total=cart.reduce((s,p)=>s+p.price,0);
-let msg=`Hello Raipur Beauty,%0AName: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(address)}%0A%0AOrder:%0A${items}%0A%0ATotal: ₹${total}`;
-window.open("https://wa.me/?text="+msg,"_blank");
+function logoutAdmin(){admin=false;document.getElementById("adminPanel").style.display="none";}
+function setCategory(c){activeCategory=c;renderProducts();}
+function renderProducts(){
+ let q=document.getElementById("search").value.toLowerCase();
+ let list=products.filter(p=>(activeCategory==="All" || String(p.category||"").toLowerCase()===activeCategory.toLowerCase()) && (p.name+" "+p.category+" "+p.desc).toLowerCase().includes(q));
+ document.getElementById("products").innerHTML=list.map(p=>`
+ <div class="card"><img class="pic" src="${p.image||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 fill=%22%23eee%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 font-size=%2222%22 fill=%22%23999%22%3EProduct%20Photo%3C/text%3E%3C/svg%3E'}">
+ <div class="info"><div class="name">${esc(p.name)}</div><div class="desc">${esc(p.desc)}</div><div class="price">₹${p.price}</div>${(p.mnf||p.exp)?`<div class="expiry">${p.mnf?"MNF: "+p.mnf:""} ${p.exp?" | EXP: "+p.exp:""}</div>`:""}<div style="font-size:12px;color:${(p.stock||0)>0?"#188038":"#d32f2f"}">Available: ${p.stock||0}</div><button class="buy" onclick="addCart(${p.id})">Add to Cart</button></div></div>`).join("");
 }
-render();
+function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function addCart(id){
+ let p=products.find(x=>x.id==id), inCart=cart.filter(x=>x==id).length;
+ if(!p || (p.stock||0)<=inCart) return alert("Available quantity खत्म हो गई है.");
+ cart.push(id);save();updateCount();alert("Product cart में add हो गया");
+}
+function placeOrder(){
+ if(!cart.length)return alert("Cart empty है");
+ let n=document.getElementById("customerName").value.trim(),ph=document.getElementById("customerPhone").value.trim(),a=document.getElementById("customerAddress").value.trim();
+ if(!n||!ph||!a)return alert("Name, mobile और address भरें");
+ let counts={};cart.forEach(id=>counts[id]=(counts[id]||0)+1);
+ for(const id of Object.keys(counts)){let p=products.find(x=>x.id==id);if(!p||(p.stock||0)<counts[id])return alert("कुछ products की quantity available नहीं है.");}
+ let items=Object.entries(counts).map(([id,q])=>{let p=products.find(x=>x.id==id);p.stock=(p.stock||0)-q;return{name:p.name,qty:q,price:p.price};});
+ let subtotal=items.reduce((s,x)=>s+x.price*x.qty,0),discount=0;
+ if(cart.length===2)discount=subtotal*.10;
+ if(cart.length>=3){let prices=items.flatMap(x=>Array(x.qty).fill(x.price)).sort((a,b)=>a-b);discount=prices[0]||0;}
+ let total=Math.max(0,Math.round(subtotal-discount));
+ orders.push({id:Date.now(),name:n,phone:ph,address:a,items,total,date:new Date().toISOString(),payment:"COD"});
+ cart=[];save();updateCount();renderProducts();
+ let text="Raipur Beauty COD Order%0A%0A"+items.map(x=>"• "+encodeURIComponent(x.name)+" × "+x.qty+" - ₹"+(x.price*x.qty)).join("%0A")+"%0A%0AAmount: ₹"+total+"%0AName: "+encodeURIComponent(n)+"%0AMobile: "+encodeURIComponent(ph)+"%0AAddress: "+encodeURIComponent(a)+"%0A🚫 No Return / No Exchange";
+ window.open("https://wa.me/917247266368?text="+text,"_blank");
+ closeModal("cartModal");alert("Order placed. Quantity automatically updated.");
+}
+function renderCustomerData(){
+ if(!admin)return;
+ const el=document.getElementById("customerData");
+ if(!orders.length){el.innerHTML="<p style='color:#777'>अभी कोई order नहीं है.</p>";return;}
+ el.innerHTML=orders.slice().reverse().map(o=>`<div style="border:1px solid #ddd;border-radius:8px;padding:10px;margin:8px 0">
+ <b>${esc(o.name)}</b> • ${esc(o.phone)}<br><small>${esc(o.address)}</small><br>
+ <small>${new Date(o.date).toLocaleString()}</small><br>
+ <b>Products:</b> ${o.items.map(x=>esc(x.name)+" × "+x.qty).join(", ")}<br>
+ <b>Amount: ₹${o.total}</b> • COD
+ </div>`).join("");
+}
+function renderManage(){
+ if(!admin)return;
+ document.getElementById("manage").innerHTML=products.map(p=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #ddd"><span>${esc(p.name)} — ₹${p.price} • Qty: ${p.stock||0} ${p.mnf?"• MNF: "+p.mnf:""} ${p.exp?"• EXP: "+p.exp:""}</span><button class="danger" onclick="deleteProduct(${p.id})">Delete</button></div>`).join("");
+}
+function deleteProduct(id){if(confirm("Delete product?")){products=products.filter(p=>p.id!==id);save();renderProducts();renderManage();}}
+function addProduct(){
+ let name=document.getElementById("pName").value.trim(),price=Number(document.getElementById("pPrice").value),stock=Number(document.getElementById("pStock").value||0),mnf=document.getElementById("pMnf").value,exp=document.getElementById("pExp").value,desc=document.getElementById("pDesc").value.trim(),cat=document.getElementById("pCategory").value.trim(),file=document.getElementById("pPhoto").files[0];
+ if(!name||!price||!file)return alert("Product name, price और photo जरूरी है");
+ let reader=new FileReader();reader.onload=()=>{products.unshift({id:Date.now(),name,price,stock,category:cat,desc,image:reader.result,mnf,exp});save();renderProducts();renderManage();document.getElementById("pName").value="";document.getElementById("pPrice").value="";document.getElementById("pStock").value="";document.getElementById("pMnf").value="";document.getElementById("pExp").value="";document.getElementById("pDesc").value="";document.getElementById("pCategory").value="";document.getElementById("pPhoto").value="";alert("Product added")};reader.readAsDataURL(file);
+}
+
+function aiTitle(name,cat){
+  const n=name.trim();
+  return n.charAt(0).toUpperCase()+n.slice(1);
+}
+function aiDescription(name,cat){
+  const map={Skin:"Everyday skincare essential with a comfortable, easy-to-use formula.",
+  Face:"Beauty essential designed for an even, polished makeup look.",
+  Eye:"Easy-to-use eye makeup essential for a defined, attractive look.",
+  Lip:"Rich, wearable lip colour designed for a smooth and attractive finish.",
+  Nail:"Easy beauty essential for a neat, polished nail look."};
+  return map[cat] || "Beauty essential for your everyday makeup routine.";
+}
+function aiBulkAdd(){
+  const raw=document.getElementById("aiBulkText").value.trim();
+  if(!raw)return alert("Products ki list paste karo.");
+  const files=[...(document.getElementById("aiBulkImages").files||[])];
+  const lines=raw.split(/\n+/).map(x=>x.trim()).filter(Boolean);
+  const rows=[];
+  for(const line of lines){
+    const parts=line.split(",").map(x=>x.trim());
+    if(parts.length<4) continue;
+    const name=aiTitle(parts[0],parts[3]), price=Number(parts[1]), stock=Number(parts[2]), cat=parts[3], mnf=parts[4]||"", exp=parts[5]||"";
+    if(!name||!price||stock<0) continue;
+    rows.push({id:Date.now()+rows.length,name,price,stock,category:["Skin","Face","Eye","Lip","Nail"].includes(cat)?cat:"Face",
+      desc:aiDescription(name,cat),image:"",mnf,exp});
+  }
+  if(!rows.length)return alert("Valid product rows nahi mile.");
+  let done=0;
+  if(!files.length){
+    products.unshift(...rows);save();renderProducts();renderManage();document.getElementById("aiBulkMsg").textContent=rows.length+" products added.";
+    return;
+  }
+  files.slice(0,rows.length).forEach((file,i)=>{
+    const r=new FileReader();r.onload=()=>{rows[i].image=r.result;done++;if(done===Math.min(files.length,rows.length)){products.unshift(...rows);save();renderProducts();renderManage();document.getElementById("aiBulkMsg").textContent=rows.length+" products added with thumbnails."}};r.readAsDataURL(file);
+  });
+  if(files.length<rows.length){setTimeout(()=>{if(done===files.length){for(let i=files.length;i<rows.length;i++)rows[i].image="";products.unshift(...rows);save();renderProducts();renderManage();}},1000)}
+}
+
+renderProducts();updateCount();
 </script>
-</body></html>
+<div id="shopTerms" style="margin-top:30px;background:#fff;border-top:1px solid #ddd;padding:18px 12px;text-align:center;color:#555;font-size:13px">
+<b>Terms & Conditions</b><br><br>
+🚫 <b>No Return & No Exchange</b> on purchased products.<br>
+Please check the product, shade and quantity carefully before placing your order.
+</div></body>
+</html>
