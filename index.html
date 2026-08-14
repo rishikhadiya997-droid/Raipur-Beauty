@@ -11,26 +11,26 @@ body{margin:0;font-family:Arial,sans-serif;background:#f7f7f7;color:#222}
 header{position:sticky;top:0;z-index:20;background:#fff;padding:12px;border-bottom:1px solid #ddd}
 .top{display:flex;align-items:center;gap:10px}
 .logo{font-size:22px;font-weight:800;color:#e91e63;flex:1}
-.dots{font-size:28px;border:0;background:none}
+.dots{font-size:30px;border:0;background:#fff;cursor:pointer;padding:4px 10px}
 .search{width:100%;padding:13px;border:1px solid #ddd;border-radius:10px;font-size:16px;margin-top:10px}
 
 .offer{
 background:linear-gradient(90deg,#111,#e91e63,#111);
-color:#fff;text-align:center;padding:11px;font-weight:800;
-font-size:14px
+color:#fff;text-align:center;padding:11px;
+font-weight:800;font-size:14px
 }
 
 .categories{
-display:flex;gap:8px;overflow:auto;background:white;
+display:flex;gap:8px;overflow:auto;background:#fff;
 padding:10px;border-bottom:1px solid #ddd
 }
-.categories button{white-space:nowrap}
+.categories button{white-space:nowrap;background:#eee}
 
 main{max-width:1000px;margin:auto;padding:12px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 
 .card{
-background:white;border-radius:13px;overflow:hidden;
+background:#fff;border-radius:13px;overflow:hidden;
 box-shadow:0 2px 8px #ddd
 }
 .pic{width:100%;aspect-ratio:1/1;object-fit:cover;background:#eee}
@@ -49,11 +49,27 @@ cursor:pointer
 .danger{background:#d32f2f;color:white}
 
 .menu{
-display:none;position:fixed;right:12px;top:60px;
-background:white;border:1px solid #ddd;border-radius:10px;
-box-shadow:0 4px 20px #aaa;z-index:50;min-width:190px
+display:none;
+position:fixed;
+right:12px;
+top:65px;
+background:#fff;
+border:1px solid #ddd;
+border-radius:10px;
+box-shadow:0 4px 20px #aaa;
+z-index:9999;
+min-width:200px;
+overflow:hidden
 }
-.menu button{display:block;width:100%;text-align:left;background:white;border-radius:0}
+.menu button{
+display:block;
+width:100%;
+text-align:left;
+background:#fff;
+border-radius:0;
+padding:14px
+}
+.menu button:hover{background:#f5f5f5}
 
 .cart{
 position:fixed;right:14px;bottom:14px;
@@ -70,7 +86,7 @@ padding:13px 17px;font-weight:bold;z-index:30
 
 .modal{
 display:none;position:fixed;inset:0;background:#0008;
-z-index:100;padding:15px;overflow:auto
+z-index:10000;padding:15px;overflow:auto
 }
 .box{
 background:white;max-width:600px;margin:5vh auto;
@@ -81,16 +97,13 @@ input,textarea,select{
 width:100%;padding:11px;margin:6px 0 10px;
 border:1px solid #ccc;border-radius:8px
 }
-
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-
 .total{font-size:21px;font-weight:bold;margin:12px 0}
 
 .product-main{
 width:100%;max-height:430px;object-fit:contain;
 background:#f4f4f4;border-radius:12px
 }
-
 .gallery{display:flex;gap:7px;overflow:auto;margin:8px 0}
 .gallery img{
 width:70px;height:70px;object-fit:cover;
@@ -100,10 +113,10 @@ border-radius:8px;border:2px solid #eee
 .related{
 display:grid;grid-template-columns:repeat(2,1fr);gap:8px
 }
-.related div{
-background:#fafafa;padding:8px;border-radius:8px
+.related div{background:#fafafa;padding:8px;border-radius:8px}
+.related img{
+width:100%;aspect-ratio:1;object-fit:cover;border-radius:7px
 }
-.related img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:7px}
 
 .ai-answer{
 background:#fafafa;border:1px solid #ddd;
@@ -115,7 +128,6 @@ line-height:1.6;white-space:pre-line
 display:none;background:white;padding:15px;
 border-radius:12px;margin-top:12px
 }
-
 .expiry{font-size:12px;color:#777;margin-top:5px}
 
 @media(min-width:650px){
@@ -133,7 +145,10 @@ border-radius:12px;margin-top:12px
 <header>
 <div class="top">
 <div class="logo">💄 Raipur Cosmetic</div>
-<button class="dots" onclick="toggleMenu()">⋮</button>
+
+<!-- THREE DOT FIX -->
+<button class="dots" id="menuButton" type="button">⋮</button>
+
 </div>
 
 <input id="search"
@@ -158,9 +173,19 @@ BUY 2 → 10% OFF &nbsp; | &nbsp; BUY 3 → LOWEST PRICE FREE 🎁
 </div>
 
 <div id="menu" class="menu">
-<button onclick="openAdmin()">🔐 Admin</button>
-<button onclick="openCart()">🛒 Cart</button>
-<button onclick="openAI()">✨ Beauty AI</button>
+
+<button type="button" onclick="openAdmin()">
+🔐 Admin Login
+</button>
+
+<button type="button" onclick="openCart();hideMenu()">
+🛒 Cart
+</button>
+
+<button type="button" onclick="openAI();hideMenu()">
+✨ Beauty AI
+</button>
+
 </div>
 
 <main>
@@ -173,7 +198,6 @@ BUY 2 → 10% OFF &nbsp; | &nbsp; BUY 3 → LOWEST PRICE FREE 🎁
 
 <h3>🎁 Update Offer</h3>
 
-<label>Offer Mode</label>
 <select id="offerMode">
 <option value="auto">⚡ Auto Offer</option>
 <option value="manual">✏️ Manual Offer</option>
@@ -214,7 +238,8 @@ placeholder="Product description"></textarea>
 <label>Product Photos — up to 5</label>
 <input id="pPhotos" type="file" accept="image/*" multiple>
 
-<label>Offer</label>
+<label>Product Offer</label>
+
 <select id="pOffer">
 <option value="auto">Auto Offer</option>
 <option value="manual">Manual Offer</option>
@@ -230,7 +255,7 @@ placeholder="Manual offer e.g. 20% OFF">
 
 <hr>
 
-<h3>👥 Customer Orders</h3>
+<h3>👥 Customer Data</h3>
 <div id="customerData"></div>
 
 <hr>
@@ -238,22 +263,29 @@ placeholder="Manual offer e.g. 20% OFF">
 <h3>📦 Manage Products</h3>
 <div id="manage"></div>
 
-<button class="danger" onclick="logoutAdmin()">Logout</button>
+<br>
+
+<button class="danger" onclick="logoutAdmin()">
+Logout
+</button>
 
 </section>
 
 </main>
 
-<button class="ai" onclick="openAI()">✨ Beauty AI</button>
+<button class="ai" onclick="openAI()">
+✨ Beauty AI
+</button>
 
 <button class="cart" onclick="openCart()">
 🛒 Cart (<span id="cartCount">0</span>)
 </button>
 
 
-<!-- ADMIN LOGIN -->
+<!-- LOGIN -->
 
 <div id="loginModal" class="modal">
+
 <div class="box">
 
 <h2>🔐 Admin Login</h2>
@@ -274,12 +306,15 @@ Cancel
 </div>
 
 
-<!-- PRODUCT DETAILS -->
+<!-- PRODUCT -->
 
 <div id="productModal" class="modal">
+
 <div class="box">
 
-<button onclick="closeModal('productModal')">✕</button>
+<button onclick="closeModal('productModal')">
+✕
+</button>
 
 <div id="productDetails"></div>
 
@@ -290,6 +325,7 @@ Cancel
 <!-- CART -->
 
 <div id="cartModal" class="modal">
+
 <div class="box">
 
 <h2>🛒 Your Cart</h2>
@@ -314,7 +350,7 @@ placeholder="Complete Delivery Address"></textarea>
 Cash on Delivery
 </label>
 
-<br>
+<br><br>
 
 <label>
 <input type="radio" name="payment" value="ONLINE">
@@ -324,21 +360,23 @@ Online Payment
 <div style="
 background:#fff5f5;
 border:1px solid #f0bcbc;
-padding:12px;border-radius:9px;margin-top:12px">
+padding:12px;
+border-radius:9px;
+margin-top:12px">
 
 <b>Terms & Conditions</b>
 
 <br><br>
 
-🚫 No Return & No Exchange.
+🚫 No Return & No Exchange
 
 <br>
 
-🚚 Expected delivery within 3 days.
+🚚 Expected delivery within 3 days
 
 <br>
 
-💳 Payment selected above.
+💳 Payment: COD / Online
 
 <br><br>
 
@@ -364,15 +402,17 @@ Close
 </div>
 
 
-<!-- BEAUTY AI -->
+<!-- AI -->
 
 <div id="aiModal" class="modal">
+
 <div class="box">
 
 <h2>✨ Beauty AI Assistant</h2>
 
 <p>
-Main aapko makeup products aur routine choose karne mein help karunga.
+Aapke skin type aur desired look ke according
+products suggest karega.
 </p>
 
 <label>Skin Type</label>
@@ -386,7 +426,7 @@ Main aapko makeup products aur routine choose karne mein help karunga.
 <option>Not Sure</option>
 </select>
 
-<label>Skin Concern</label>
+<label>Concern</label>
 
 <select id="concern">
 <option>No Major Concern</option>
@@ -411,15 +451,14 @@ Main aapko makeup products aur routine choose karne mein help karunga.
 type="number"
 placeholder="Budget ₹">
 
-<button class="adminbtn"
-onclick="getBeautyAdvice()">
+<button class="adminbtn" onclick="getBeautyAdvice()">
 ✨ Get Recommendation
 </button>
 
 <div id="aiAnswer"
 class="ai-answer"
 style="margin-top:12px">
-Apni details select karke recommendation lein.
+Details select karke recommendation lein.
 </div>
 
 <button onclick="closeModal('aiModal')">
@@ -495,6 +534,59 @@ text:"🔥 TODAY'S BEAUTY OFFER 🔥\nBUY 2 → 10% OFF | BUY 3 → LOWEST PRICE
 let admin=false;
 
 
+/* THREE DOT MENU FIX */
+
+const menuButton=
+document.getElementById("menuButton");
+
+menuButton.addEventListener(
+"click",
+function(e){
+
+e.stopPropagation();
+
+const menu=
+document.getElementById("menu");
+
+menu.style.display=
+menu.style.display==="block"
+?"none"
+:"block";
+
+}
+);
+
+
+document.addEventListener(
+"click",
+function(e){
+
+const menu=
+document.getElementById("menu");
+
+if(
+menu.style.display==="block" &&
+!menu.contains(e.target) &&
+e.target!==menuButton
+){
+
+menu.style.display="none";
+
+}
+
+}
+);
+
+
+function hideMenu(){
+
+document.getElementById(
+"menu"
+).style.display="none";
+
+}
+
+
 function save(){
 
 localStorage.setItem(
@@ -531,21 +623,9 @@ m=>({
 }
 
 
-function toggleMenu(){
-
-let m=document.getElementById("menu");
-
-m.style.display=
-m.style.display==="block"
-?"none"
-:"block";
-
-}
-
-
 function openAdmin(){
 
-toggleMenu();
+hideMenu();
 
 document.getElementById(
 "loginModal"
@@ -556,10 +636,12 @@ document.getElementById(
 
 function login(){
 
-if(
-document.getElementById("adminPassword").value
-===ADMIN_PASSWORD
-){
+const pass=
+document.getElementById(
+"adminPassword"
+).value;
+
+if(pass===ADMIN_PASSWORD){
 
 admin=true;
 
@@ -570,6 +652,7 @@ document.getElementById(
 ).style.display="block";
 
 renderManage();
+
 renderCustomerData();
 
 }else{
@@ -594,7 +677,33 @@ document.getElementById(
 
 function closeModal(id){
 
-document.getElementById(id).style.display="none";
+document.getElementById(
+id
+).style.display="none";
+
+}
+
+
+function openCart(){
+
+hideMenu();
+
+renderCart();
+
+document.getElementById(
+"cartModal"
+).style.display="block";
+
+}
+
+
+function openAI(){
+
+hideMenu();
+
+document.getElementById(
+"aiModal"
+).style.display="block";
 
 }
 
@@ -611,11 +720,16 @@ renderProducts();
 function saveOffer(){
 
 offerSettings.mode=
-document.getElementById("offerMode").value;
+document.getElementById(
+"offerMode"
+).value;
 
 offerSettings.text=
-document.getElementById("offerText").value.trim()
-||offerSettings.text;
+document.getElementById(
+"offerText"
+).value.trim()
+||
+offerSettings.text;
 
 localStorage.setItem(
 "rb_offer",
@@ -634,33 +748,31 @@ function updateOffer(){
 document.getElementById(
 "offerBanner"
 ).innerHTML=
-esc(offerSettings.text).replace(
-/\n/g,"<br>"
-);
+esc(offerSettings.text)
+.replace(/\n/g,"<br>");
 
 }
 
 
 function renderProducts(){
 
-let q=
-document.getElementById("search")
-.value
-.toLowerCase();
+const search=
+document.getElementById(
+"search"
+).value.toLowerCase();
 
-let list=products.filter(p=>{
+const list=products.filter(p=>{
 
-let matchCategory=
-activeCategory==="All"
-||
+const catOK=
+activeCategory==="All" ||
 String(p.category).toLowerCase()
 ===activeCategory.toLowerCase();
 
-let text=
+const text=
 (p.name+" "+p.category+" "+p.desc)
 .toLowerCase();
 
-return matchCategory&&text.includes(q);
+return catOK && text.includes(search);
 
 });
 
@@ -669,15 +781,24 @@ document.getElementById(
 "products"
 ).innerHTML=list.map(p=>{
 
-let img=
+const image=
 p.images&&p.images.length
 ?p.images[0]
 :"https://via.placeholder.com/500?text=Product";
 
 let offer="";
 
-if(p.offer==="manual"&&p.manualOffer)
-offer="🔥 "+p.manualOffer;
+if(
+p.offer==="manual" &&
+p.manualOffer
+){
+
+offer=
+`<div style="color:#e91e63;font-weight:bold">
+🔥 ${esc(p.manualOffer)}
+</div>`;
+
+}
 
 return `
 
@@ -685,7 +806,7 @@ return `
 
 <img
 class="pic"
-src="${img}"
+src="${image}"
 onclick="openProduct(${p.id})">
 
 <div class="info">
@@ -702,10 +823,7 @@ ${esc(p.desc)}
 ₹${p.price}
 </div>
 
-${offer?
-`<div style="color:#e91e63;font-weight:bold">
-${esc(offer)}
-</div>`:""}
+${offer}
 
 ${p.exp?
 `<div class="expiry">
@@ -731,7 +849,6 @@ ${p.stock<=0?"disabled":""}>
 </button>
 
 </div>
-
 </div>
 
 `;
@@ -743,7 +860,8 @@ ${p.stock<=0?"disabled":""}>
 
 function addCart(id){
 
-let p=products.find(x=>x.id==id);
+const p=
+products.find(x=>x.id==id);
 
 if(!p||p.stock<=0){
 
@@ -753,7 +871,7 @@ return;
 
 }
 
-let count=
+const count=
 cart.filter(x=>x==id).length;
 
 if(count>=p.stock){
@@ -786,16 +904,17 @@ document.getElementById(
 
 function openProduct(id){
 
-let p=products.find(x=>x.id==id);
+const p=
+products.find(x=>x.id==id);
 
 if(!p)return;
 
-let imgs=
+const imgs=
 p.images&&p.images.length
 ?p.images
 :["https://via.placeholder.com/500?text=Product"];
 
-let related=
+const related=
 products.filter(x=>
 x.id!==p.id &&
 (
@@ -820,7 +939,9 @@ ${imgs.map(x=>`
 
 <img
 src="${x}"
-onclick="document.getElementById('mainProductImage').src='${x}'">
+onclick="
+document.getElementById('mainProductImage').src='${x}'
+">
 
 `).join("")}
 
@@ -838,7 +959,7 @@ ${p.exp?
 `<p><b>EXP:</b> ${esc(p.exp)}</p>`:""}
 
 <p>
-<b>Stock:</b> ${p.stock}
+<b>Available:</b> ${p.stock}
 </p>
 
 <button
@@ -884,20 +1005,9 @@ document.getElementById(
 }
 
 
-function openCart(){
-
-renderCart();
-
-document.getElementById(
-"cartModal"
-).style.display="block";
-
-}
-
-
 function renderCart(){
 
-let counts={};
+const counts={};
 
 cart.forEach(id=>{
 counts[id]=(counts[id]||0)+1;
@@ -909,11 +1019,13 @@ let html="";
 
 Object.entries(counts).forEach(([id,q])=>{
 
-let p=products.find(x=>x.id==id);
+const p=
+products.find(x=>x.id==id);
 
 if(!p)return;
 
-let amount=p.price*q;
+const amount=
+p.price*q;
 
 subtotal+=amount;
 
@@ -928,10 +1040,9 @@ border-bottom:1px solid #ddd">
 <br>
 
 ₹${p.price} × ${q}
-=
-<b>₹${amount}</b>
+= <b>₹${amount}</b>
 
-<br>
+<br><br>
 
 <button onclick="removeOne(${id})">
 ➖
@@ -952,12 +1063,14 @@ border-bottom:1px solid #ddd">
 });
 
 
-let discount=calculateDiscount();
+const discount=
+calculateDiscount();
 
-let total=Math.max(
-0,
+const total=
+Math.max(0,
 Math.round(subtotal-discount)
 );
+
 
 document.getElementById(
 "cartItems"
@@ -967,18 +1080,20 @@ html||"<p>Cart empty hai.</p>";
 document.getElementById(
 "cartTotal"
 ).innerHTML=
-`Subtotal: ₹${subtotal}
+`
+Subtotal: ₹${subtotal}
 <br>
 Discount: ₹${discount}
 <br>
-Final Total: ₹${total}`;
+Final Total: ₹${total}
+`;
 
 }
 
 
 function removeOne(id){
 
-let i=cart.indexOf(id);
+const i=cart.indexOf(id);
 
 if(i>=0){
 
@@ -997,7 +1112,8 @@ renderCart();
 
 function removeAll(id){
 
-cart=cart.filter(x=>x!=id);
+cart=
+cart.filter(x=>x!=id);
 
 save();
 
@@ -1012,51 +1128,57 @@ function calculateDiscount(){
 
 if(!cart.length)return 0;
 
-let counts={};
+const counts={};
 
 cart.forEach(id=>{
 counts[id]=(counts[id]||0)+1;
 });
 
-let items=[];
+let prices=[];
 
-Object.entries(counts).forEach(([id,q])=>{
+Object.entries(counts)
+.forEach(([id,q])=>{
 
-let p=products.find(x=>x.id==id);
+const p=
+products.find(x=>x.id==id);
 
 if(p){
 
 for(let i=0;i<q;i++)
-items.push(p.price);
+prices.push(p.price);
 
 }
 
 });
 
-let subtotal=
-items.reduce((a,b)=>a+b,0);
+const subtotal=
+prices.reduce(
+(a,b)=>a+b,0
+);
 
-let discount=0;
+if(
+offerSettings.mode==="manual"
+){
 
-/*
-AUTO OFFER
-Buy 2 = 10%
-Buy 3+ = cheapest item free
-*/
-
-if(items.length===2){
-
-discount=subtotal*0.10;
+return 0;
 
 }
 
-else if(items.length>=3){
+if(prices.length===2){
 
-discount=Math.min(...items);
+return Math.round(
+subtotal*0.10
+);
 
 }
 
-return Math.round(discount);
+if(prices.length>=3){
+
+return Math.min(...prices);
+
+}
+
+return 0;
 
 }
 
@@ -1069,9 +1191,11 @@ function(){
 
 document.getElementById(
 "confirmBtn"
-).disabled=!this.checked;
+).disabled=
+!this.checked;
 
-});
+}
+);
 
 
 function placeOrder(){
@@ -1084,32 +1208,36 @@ return;
 
 }
 
-if(!document.getElementById(
+if(
+!document.getElementById(
 "agreeTerms"
-).checked){
+).checked
+){
 
-alert("Please agree to Terms & Conditions");
+alert(
+"Please agree to Terms & Conditions"
+);
 
 return;
 
 }
 
-let name=
+const name=
 document.getElementById(
 "customerName"
 ).value.trim();
 
-let phone=
+const phone=
 document.getElementById(
 "customerPhone"
 ).value.trim();
 
-let address=
+const address=
 document.getElementById(
 "customerAddress"
 ).value.trim();
 
-let payment=
+const payment=
 document.querySelector(
 'input[name="payment"]:checked'
 ).value;
@@ -1117,29 +1245,36 @@ document.querySelector(
 
 if(!name||!phone||!address){
 
-alert("Name, mobile aur address bharna zaroori hai");
+alert(
+"Name, mobile aur address bharna zaroori hai"
+);
 
 return;
 
 }
 
 
-let counts={};
+const counts={};
 
 cart.forEach(id=>{
 counts[id]=(counts[id]||0)+1;
 });
 
 
-for(let id in counts){
+for(const id in counts){
 
-let p=products.find(x=>x.id==id);
+const p=
+products.find(x=>x.id==id);
 
-if(!p||p.stock<counts[id]){
+if(
+!p ||
+p.stock<counts[id]
+){
 
 alert(
 p?
-p.name+" ka stock available nahi hai."
+p.name+
+" ka stock available nahi hai."
 :"Product unavailable"
 );
 
@@ -1150,11 +1285,12 @@ return;
 }
 
 
-let items=[];
+const items=[];
 
-for(let id in counts){
+for(const id in counts){
 
-let p=products.find(x=>x.id==id);
+const p=
+products.find(x=>x.id==id);
 
 p.stock-=counts[id];
 
@@ -1171,48 +1307,48 @@ price:p.price
 }
 
 
-let subtotal=
+const subtotal=
 items.reduce(
 (s,x)=>s+x.price*x.qty,
 0
 );
 
-let discount=calculateDiscount();
+const discount=
+calculateDiscount();
 
-let total=Math.max(
+const total=
+Math.max(
 0,
 Math.round(subtotal-discount)
 );
 
 
-let order={
+orders.push({
 
 id:Date.now(),
 
-name,
+name:name,
 
-phone,
+phone:phone,
 
-address,
+address:address,
 
-payment,
+payment:payment,
 
-items,
+items:items,
 
-subtotal,
+subtotal:subtotal,
 
-discount,
+discount:discount,
 
-total,
+total:total,
 
 date:new Date().toISOString(),
 
 delivery:"Within 3 days"
 
-};
+});
 
-
-orders.push(order);
 
 cart=[];
 
@@ -1222,10 +1358,174 @@ updateCount();
 
 renderProducts();
 
+renderCustomerData();
+
+
 closeModal("cartModal");
 
 
-if(payment==="ONLINE"){
-
 alert(
-"Online payment selected. Real payment gateway connect karna
+"✅ Order Confirmed!\n\n"+
+"Payment: "+payment+
+"\nAmount: ₹"+total+
+"\nDelivery: Within 3 days"
+);
+
+}
+
+
+function renderCustomerData(){
+
+if(!admin)return;
+
+const el=
+document.getElementById(
+"customerData"
+);
+
+if(!orders.length){
+
+el.innerHTML=
+"<p>No orders yet.</p>";
+
+return;
+
+}
+
+el.innerHTML=
+orders.slice().reverse()
+.map(o=>`
+
+<div style="
+border:1px solid #ddd;
+border-radius:8px;
+padding:10px;
+margin:8px 0">
+
+<b>${esc(o.name)}</b>
+
+<br>
+
+📱 ${esc(o.phone)}
+
+<br>
+
+🏠 ${esc(o.address)}
+
+<br>
+
+💳 ${esc(o.payment)}
+
+<br>
+
+🛍️ ${o.items.map(
+x=>esc(x.name)+" × "+x.qty
+).join(", ")}
+
+<br>
+
+<b>₹${o.total}</b>
+
+<br>
+
+🚚 ${o.delivery}
+
+<br>
+
+<small>
+${new Date(o.date).toLocaleString()}
+</small>
+
+</div>
+
+`).join("");
+
+}
+
+
+function renderManage(){
+
+if(!admin)return;
+
+document.getElementById(
+"manage"
+).innerHTML=
+products.map(p=>`
+
+<div style="
+padding:9px 0;
+border-bottom:1px solid #ddd">
+
+<b>${esc(p.name)}</b>
+
+<br>
+
+₹${p.price}
+• Stock: ${p.stock}
+
+${p.exp?
+" • EXP: "+esc(p.exp):""}
+
+<br>
+
+<button
+class="danger"
+onclick="deleteProduct(${p.id})">
+
+Delete
+
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+
+function deleteProduct(id){
+
+if(
+confirm("Delete this product?")
+){
+
+products=
+products.filter(
+p=>p.id!==id
+);
+
+save();
+
+renderProducts();
+
+renderManage();
+
+}
+
+}
+
+
+function addProduct(){
+
+const name=
+document.getElementById(
+"pName"
+).value.trim();
+
+const price=
+Number(
+document.getElementById(
+"pPrice"
+).value
+);
+
+const stock=
+Number(
+document.getElementById(
+"pStock"
+).value||0
+);
+
+const category=
+document.getElementById(
+"pCa
